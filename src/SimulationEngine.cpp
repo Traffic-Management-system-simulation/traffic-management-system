@@ -1,50 +1,79 @@
 #include "SimulationEngine.hpp"
 
 namespace {
-const Approach kApproaches[] = {Approach::NORTH, Approach::SOUTH,
-                                Approach::EAST, Approach::WEST};
+const Approach ALL_APPROACHES[] = {
+    Approach::NORTH, Approach::SOUTH, Approach::EAST, Approach::WEST
+};
+} // namespace
+
+void SimulationEngine::start() {
+    if (state == SimState::STOPPED) state = SimState::RUNNING;
 }
 
-// One discrete time step (TMS-F-016, F-017, F-015):
-//   1. ask the signal manager what colour each approach shows at this tick
-//   2. for every approach that is GREEN, dequeue its front vehicle (if any)
-//   3. record the vehicle in the statistics, then advance the clock
-// Red and yellow approaches are never dequeued, so their vehicles keep waiting.
-void SimulationEngine::tick() {
-    if (state != SimState::RUNNING) return;
+void SimulationEngine::pause() {
+    if (state == SimState::RUNNING) state = SimState::PAUSED;
+}
 
+void SimulationEngine::resume() {
+    if (state == SimState::PAUSED) state = SimState::RUNNING;
+}
+
+void SimulationEngine::stop() {
+    state = SimState::STOPPED;   // tick count and statistics stay available for the summary
+}
+
+void SimulationEngine::reset() {
+    currentTick = 0;
+    state = SimState::STOPPED;
     lastProcessed.clear();
-    signalMgr.changeSignal(currentTick);
+    queueMgr.reset();
+    signalMgr.reset();
+    statsMgr.reset();
+    // autoGenEnabled / autoGenProbability are user settings and are kept
+}
 
-    for (Approach app : kApproaches) {
-        if (signalMgr.getSignalState(app) != SignalColor::GREEN) continue;
+void SimulationEngine::setAutoGeneration(bool enabled, double probability) {
+    if (probability < 0.0) probability = 0.0;
+    if (probability > 1.0) probability = 1.0;
+    autoGenEnabled = enabled;
+    autoGenProbability = probability;
+}
 
+void SimulationEngine::generateVehicleIfDue() {
+    if (!autoGenEnabled) return;
+    Approach a = Approach::NORTH;
+    if (vehicleMgr.generateVehicle(a, autoGenProbability)) {
+        queueMgr.enqueueVehicle(vehicleMgr.createVehicle(a, currentTick));
+    }
+}
+
+// SAD 4.2.2: only a GREEN approach may release its front vehicle.
+// RED and YELLOW never dequeue; an empty queue is a no-op.
+void SimulationEngine::processGreenApproaches() {
+    for (Approach a : ALL_APPROACHES) {
+        if (signalMgr.getSignalState(a) != SignalColor::GREEN) continue;
         Vehicle v{};
-        if (queueMgr.dequeueVehicle(app, v)) {   // false on empty queue: safe
+        if (queueMgr.dequeueVehicle(a, v)) {
             statsMgr.recordProcessedVehicle(v, currentTick);
             lastProcessed.push_back(v);
         }
     }
+}
+
+void SimulationEngine::tick() {
+    if (state != SimState::RUNNING) return;
+
+    lastProcessed.clear();
+    generateVehicleIfDue();
+    signalMgr.changeSignal(currentTick);
+    processGreenApproaches();
     ++currentTick;
 }
 
-void SimulationEngine::start()  { if (state == SimState::STOPPED) state = SimState::RUNNING; }
-void SimulationEngine::pause()  { if (state == SimState::RUNNING) state = SimState::PAUSED;  }
-void SimulationEngine::resume() { if (state == SimState::PAUSED)  state = SimState::RUNNING; }
-void SimulationEngine::stop()   { state = SimState::STOPPED; }   // statistics are kept for the summary
-
-// TMS-F-020: back to the initial state (queues, counters, signals, clock).
-void SimulationEngine::reset() {
-    state = SimState::STOPPED;
-    currentTick = 0;
-    queueMgr.reset();
-    statsMgr.reset();
-    signalMgr.reset();
-    lastProcessed.clear();
-}
-
-// Headless run used by tests/automation: run `ticks` steps without any console I/O.
 void SimulationEngine::runSimulation(int ticks) {
-    start();
-    for (int i = 0; i < ticks && state == SimState::RUNNING; ++i) tick();
+    if (ticks <= 0) return;
+    if (state == SimState::STOPPED) start();
+    for (int i = 0; i < ticks && state == SimState::RUNNING; ++i) {
+        tick();
+    }
 }
