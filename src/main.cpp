@@ -145,14 +145,47 @@ void printView(Session& s) {
 
 void printStatistics(Session& s) {
     const int ticks = s.engine.getCurrentTick();
-    s.engine.getStatsManager().printSummary(ticks);
-    std::cout << "Still waiting:      " << s.engine.getQueueManager().getTotalWaitingCount() << "\n"
-              << "By approach (processed / waiting):\n";
+    const auto& stats = s.engine.getStatsManager();
+    const auto& queues = s.engine.getQueueManager();
+
+    std::cout << "\n========== SIMULATION SUMMARY ==========\n";
+
+    std::cout << std::left << std::setw(28) << "Metric"
+              << "Value\n";
+    std::cout << "-----------------------------------------\n";
+
+    std::cout << std::left << std::setw(28) << "Total simulation ticks"
+              << ticks << "\n";
+
+    std::cout << std::left << std::setw(28) << "Vehicles processed"
+              << stats.getProcessedCount() << "\n";
+
+    std::cout << std::left << std::setw(28) << "Vehicles still waiting"
+              << queues.getTotalWaitingCount() << "\n";
+
+    std::cout << std::fixed << std::setprecision(2);
+
+    std::cout << std::left << std::setw(28) << "Average waiting time"
+              << stats.calculateAverageWaitTime() << " ticks\n";
+
+    std::cout << std::left << std::setw(28) << "Throughput"
+              << stats.calculateThroughput(ticks) << " vehicles/tick\n";
+
+    std::cout << "\n";
+    std::cout << std::left << std::setw(12) << "Approach"
+              << std::setw(15) << "Processed"
+              << "Waiting\n";
+
+    std::cout << "-----------------------------------------\n";
+
     for (int i = 0; i < 4; ++i) {
-        std::cout << "  " << std::left << std::setw(6) << approachName(kApproaches[i]) << " "
-                  << s.processedBy[i] << " / "
-                  << s.engine.getQueueManager().getQueueSize(kApproaches[i]) << "\n";
+        std::cout << std::left << std::setw(12)
+                  << approachName(kApproaches[i])
+                  << std::setw(15) << s.processedBy[i]
+                  << queues.getQueueSize(kApproaches[i]) << "\n";
     }
+
+    std::cout << "=========================================\n";
 }
 
 // One line per tick (SRS 3.1) plus one line per vehicle that crossed.
