@@ -50,6 +50,13 @@ void SignalManager::setDurations(int green, int yellow) {
     if (green > 0) greenDuration = green;
     if (yellow > 0) yellowDuration = yellow;
 }
+int SignalManager::getGreenDuration() const {
+    return greenDuration;
+}
+
+int SignalManager::getYellowDuration() const {
+    return yellowDuration;
+}
 
 void SignalManager::toggleManualMode(bool enable) {
     isManualMode = enable;
