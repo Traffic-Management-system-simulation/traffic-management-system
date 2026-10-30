@@ -8,6 +8,7 @@
 #include <iostream>
 #include <string>
 #include "SimulationEngine.hpp"
+#include "FileManager.hpp"
 
 namespace {
 
@@ -115,10 +116,12 @@ struct Session {
 };
 
 void printMenu() {
-    std::cout << "\n"
-              << " [1] Start   [2] Pause   [3] Resume   [4] Reset   [5] Stop   [6] Add vehicle\n"
-              << " [7] Auto-generate on/off   [8] Signal durations   [9] Auto/Manual signals\n"
-              << " [10] View queues & signals   [11] Statistics   [12] Step N ticks   [0] Quit\n";
+    std::cout
+        << "\n [1] Start   [2] Pause   [3] Resume   [4] Reset   [5] Stop   [6] Add vehicle\n"
+        << " [7] Auto-generate on/off   [8] Signal durations   [9] Auto/Manual signals\n"
+        << " [10] View queues & signals   [11] Statistics   [12] Step N ticks\n"
+        << " [13] Save settings   [14] Load settings   [15] Export statistics CSV\n"
+        << " [0] Quit\n";
 }
 
 void printStatusLine(const Session& s) {
@@ -287,6 +290,35 @@ void doReset(Session& s) {
 }
 
 }  // namespace
+void doSaveSettings(Session& s) {
+    if (FileManager::saveSettings(
+            s.engine.getSignalManager(), "simulation_settings.txt")) {
+        std::cout << "Settings saved successfully.\n";
+    } else {
+        std::cout << "Error: Could not save settings.\n";
+    }
+}
+
+void doLoadSettings(Session& s) {
+    if (FileManager::loadSettings(
+            s.engine.getSignalManager(), "simulation_settings.txt")) {
+        std::cout << "Settings loaded successfully.\n";
+    } else {
+        std::cout << "Error: Could not load settings. Check the file and its values.\n";
+    }
+}
+
+void doExportStatistics(Session& s) {
+    if (FileManager::exportStatistics(
+            s.engine.getStatsManager(),
+            s.engine.getCurrentTick(),
+            s.engine.getQueueManager().getTotalWaitingCount(),
+            "simulation_statistics.csv")) {
+        std::cout << "Statistics exported to simulation_statistics.csv\n";
+    } else {
+        std::cout << "Error: Could not export statistics.\n";
+    }
+}
 
 int main(int argc, char** argv) {
     for (int i = 1; i < argc; ++i) {
@@ -301,7 +333,7 @@ int main(int argc, char** argv) {
     while (true) {
         printMenu();
         printStatusLine(session);
-        if (!askInt("Choose option: ", 0, 12, choice)) break;   // EOF ends the session cleanly
+        if (!askInt("Choose option: ", 0, 15, choice)) break;   // EOF ends the session cleanly
         switch (choice) {
             case 1:  doStart(session); break;
             case 2:  doPause(session); break;
@@ -315,6 +347,9 @@ int main(int argc, char** argv) {
             case 10: printView(session); break;
             case 11: printStatistics(session); break;
             case 12: doStep(session); break;
+            case 13: doSaveSettings(session); break;
+            case 14: doLoadSettings(session); break;
+            case 15: doExportStatistics(session); break;
             case 0:  std::cout << "Goodbye.\n"; return 0;
             default: break;
         }
