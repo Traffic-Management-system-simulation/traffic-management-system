@@ -67,20 +67,27 @@ void test_invalid_settings() {
     CHECK(signals.getYellowDuration() == 5);
 
     // Invalid boundary values
-    {
-        std::ofstream file("test_settings.txt");
-        file << "0,1\n";
-    }
-    CHECK(!FileManager::loadSettings(signals, "test_settings.txt"));
 
-    {
-        std::ofstream file("test_settings.txt");
-        file << "1,0\n";
-    }
-    CHECK(!FileManager::loadSettings(signals, "test_settings.txt"));
+    const char* invalidBoundaryInputs[] = {
+        "0,5\n",    // Green below minimum
+        "61,5\n",   // Green above maximum
+        "15,0\n",   // Yellow below minimum
+        "15,11\n"   // Yellow above maximum
+    };
 
-    CHECK(signals.getGreenDuration() == 15);
-    CHECK(signals.getYellowDuration() == 5);
+    for (const char* input : invalidBoundaryInputs) {
+        {
+            std::ofstream file("test_settings.txt");
+            file << input;
+        }
+
+        CHECK(!FileManager::loadSettings(signals, "test_settings.txt"));
+
+        // Failed loads must preserve existing configuration
+        CHECK(signals.getGreenDuration() == 15);
+        CHECK(signals.getYellowDuration() == 5);
+    }
+
 
     // Trailing content on the same line
     {
