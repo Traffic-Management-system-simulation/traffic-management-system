@@ -309,10 +309,19 @@ void doLoadSettings(Session& s) {
 }
 
 void doExportStatistics(Session& s) {
+size_t waitingByApproach[4] = {
+    s.engine.getQueueManager().getQueueSize(Approach::NORTH),
+    s.engine.getQueueManager().getQueueSize(Approach::SOUTH),
+    s.engine.getQueueManager().getQueueSize(Approach::EAST),
+    s.engine.getQueueManager().getQueueSize(Approach::WEST)
+};
+
     if (FileManager::exportStatistics(
             s.engine.getStatsManager(),
             s.engine.getCurrentTick(),
             s.engine.getQueueManager().getTotalWaitingCount(),
+            s.processedBy,
+            waitingByApproach,
             "simulation_statistics.csv")) {
         std::cout << "Statistics exported to simulation_statistics.csv\n";
     } else {

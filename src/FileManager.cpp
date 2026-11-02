@@ -31,7 +31,17 @@ bool FileManager::loadSettings(SignalManager& signals,
 
     std::string line;
     if (!std::getline(file, line)) {
-        return false;
+       return false;
+    }
+
+    // Reject any additional lines or trailing file content.
+    std::string extraLine;
+    if (std::getline(file, extraLine)) {
+       return false;
+    }
+
+    if (file.bad()) {
+       return false;
     }
 
     std::stringstream input(line);
@@ -59,6 +69,8 @@ bool FileManager::loadSettings(SignalManager& signals,
 bool FileManager::exportStatistics(const StatisticsManager& stats,
                                    int totalTicks,
                                    int waitingVehicles,
+                                   const int processedBy[4],
+                                   const size_t waitingByApproach[4],
                                    const std::string& filename) {
     std::ofstream file(filename);
 
@@ -70,6 +82,18 @@ bool FileManager::exportStatistics(const StatisticsManager& stats,
     file << "Total Simulation Ticks," << totalTicks << "\n";
     file << "Vehicles Processed," << stats.getProcessedCount() << "\n";
     file << "Vehicles Still Waiting," << waitingVehicles << "\n";
+
+    const char* approachNames[4] = {
+        "North", "South", "East", "West"
+    };
+
+    for (int i = 0; i < 4; ++i) {
+        file << approachNames[i] << " Vehicles Processed,"
+             << processedBy[i] << "\n";
+
+        file << approachNames[i] << " Vehicles Waiting,"
+             << waitingByApproach[i] << "\n";
+    }
 
     file << std::fixed << std::setprecision(2);
 

@@ -14,9 +14,11 @@ public:
                              const std::string& filename);
 
     static bool exportStatistics(const StatisticsManager& stats,
-                                 int totalTicks,
-                                 int waitingVehicles,
-                                 const std::string& filename);
+                             int totalTicks,
+                             int waitingVehicles,
+                             const int processedBy[4],
+                             const size_t waitingByApproach[4],
+                             const std::string& filename);
 };
 
 #endif // FILE_MANAGER_HPP
