@@ -16,6 +16,8 @@ private:
     SignalManager signalMgr;
     StatisticsManager statsMgr;
     VehicleManager vehicleMgr;
+    bool autoGenerate = false;
+    double generateProbability = 0.30;
     std::vector<Vehicle> lastProcessed;   // vehicles that crossed in the most recent tick
 public:
     void runSimulation(int ticks);
@@ -32,6 +34,15 @@ public:
     SignalManager& getSignalManager() { return signalMgr; }
     StatisticsManager& getStatsManager() { return statsMgr; }
     VehicleManager& getVehicleManager() { return vehicleMgr; }
+    void setAutoGeneration(bool enabled, double probability = 0.30) {
+    if (probability < 0.0 || probability > 1.0) return;
+    autoGenerate = enabled;
+    generateProbability = probability;
+}
+
+    bool isAutoGenerationEnabled() const {
+       return autoGenerate;
+}
 };
 
 #endif // SIMULATION_ENGINE_HPP

@@ -195,6 +195,7 @@ void doAddVehicle(Session& s) {
 void doToggleAutoGenerate(Session& s) {
     if (s.autoGenerate) {
         s.autoGenerate = false;
+        s.engine.setAutoGeneration(false);
         std::cout << "  Auto-generation OFF.\n";
         return;
     }
@@ -202,6 +203,8 @@ void doToggleAutoGenerate(Session& s) {
     if (!askDouble("  Arrival probability per tick (0.01-1.00): ", 0.01, 1.0, p)) return;
     s.generateProbability = p;
     s.autoGenerate = true;
+    s.engine.setAutoGeneration(true, s.generateProbability);
+
     std::cout << "  Auto-generation ON (p=" << p << ").\n";
 }
 
@@ -239,13 +242,6 @@ void doStep(Session& s) {
     int n = 0;
     if (!askInt("  Number of ticks (1-200): ", 1, 200, n)) return;
     for (int i = 0; i < n; ++i) {
-        if (s.autoGenerate) {
-            Approach a = Approach::NORTH;
-            if (s.engine.getVehicleManager().generateVehicle(a, s.generateProbability)) {
-                s.engine.getQueueManager().enqueueVehicle(
-                    s.engine.getVehicleManager().createVehicle(a, s.engine.getCurrentTick()));
-            }
-        }
         s.engine.tick();
         printTickLine(s);
     }
@@ -281,6 +277,8 @@ void doStop(Session& s) {
 
 void doReset(Session& s) {
     s.engine.reset();
+    s.autoGenerate = false;
+    s.generateProbability = 0.30;
     s.manualSignals = false;
     for (int& n : s.processedBy) n = 0;
     std::cout << "  Reset: queues, counters, signals and clock are back to their initial state.\n";

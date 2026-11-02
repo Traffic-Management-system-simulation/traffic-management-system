@@ -16,6 +16,14 @@ void SimulationEngine::tick() {
     lastProcessed.clear();
     signalMgr.changeSignal(currentTick);
 
+        if (autoGenerate) {
+        Approach approach = Approach::NORTH;
+        if (vehicleMgr.generateVehicle(approach, generateProbability)) {
+            queueMgr.enqueueVehicle(
+                vehicleMgr.createVehicle(approach, currentTick));
+        }
+    }
+
     for (Approach app : kApproaches) {
         if (signalMgr.getSignalState(app) != SignalColor::GREEN) continue;
 
@@ -41,6 +49,8 @@ void SimulationEngine::reset() {
     statsMgr.reset();
     signalMgr.reset();
     lastProcessed.clear();
+    autoGenerate = false;
+    generateProbability = 0.30;
 }
 
 // Headless run used by tests/automation: run `ticks` steps without any console I/O.

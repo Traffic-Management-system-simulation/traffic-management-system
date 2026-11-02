@@ -70,25 +70,46 @@ int main() {
         check(e.getStatsManager().calculateAverageWaitTime() >= 0.0, "average wait is valid");
     }
 
-    // ---- Test 2: 100 auto-generated vehicles (p = 1.0), one arrival per tick ----
+        // ---- Test 2: 100 auto-generated vehicles through SimulationEngine ----
     {
         SimulationEngine e;
         e.reset();
+        e.setAutoGeneration(true, 1.0);
         e.start();
-        int generated = 0;
+
+        std::set<int> ids;
+        bool conf = false, dup = false;
+
+        // Generate exactly 100 vehicles, one per tick.
         for (int i = 0; i < 100; ++i) {
-            Approach a = Approach::NORTH;
-            if (e.getVehicleManager().generateVehicle(a, 1.0)) {
-                e.getQueueManager().enqueueVehicle(
-                    e.getVehicleManager().createVehicle(a, e.getCurrentTick()));
-                ++generated;
-            }
             e.tick();
+
+            if (conflict(e)) conf = true;
+
+            for (const Vehicle& v : e.getLastProcessed()) {
+                if (!ids.insert(v.id).second) dup = true;
+            }
         }
-        std::set<int> ids; bool conf = false, dup = false;
-        drain(e, ids, conf, dup);
-        check(generated == 100, "auto-generation produced 100 vehicles");
-        check(e.getStatsManager().getProcessedCount() == 100, "auto-generated vehicles all processed");
+
+                int generated = 100;
+
+                // Stop generating new vehicles before draining existing queues.
+                e.setAutoGeneration(false);
+
+                int drainTicks = drain(e, ids, conf, dup);
+              
+        std::cout << "  auto-generated " << generated
+                  << " vehicles; drained remaining queues in "
+                  << drainTicks << " ticks\n";
+
+        check(generated == 100, "100 vehicles generated through engine");
+        check(e.getStatsManager().getProcessedCount() == 100,
+              "all auto-generated vehicles processed");
+        check(e.getQueueManager().getTotalWaitingCount() == 0,
+              "auto-generated queues empty");
+        check(ids.size() == 100 && !dup,
+              "auto-generated vehicles have unique IDs");
+        check(!conf, "no conflicting greens during auto-generation");
     }
 
     // ---- Test 3: stop and reset with vehicles still queued ----
