@@ -26,27 +26,81 @@ void test_save_and_load_settings() {
     CHECK(loaded.getYellowDuration() == 5);
 }
 
+
 void test_invalid_settings() {
     SignalManager signals;
     signals.setDurations(15, 5);
 
+    // Invalid duration values
     {
         std::ofstream file("test_settings.txt");
         file << "100,20\n";
     }
     CHECK(!FileManager::loadSettings(signals, "test_settings.txt"));
+    CHECK(signals.getGreenDuration() == 15);
+    CHECK(signals.getYellowDuration() == 5);
 
+    // Non-numeric values
     {
         std::ofstream file("test_settings.txt");
         file << "abc,xyz\n";
     }
     CHECK(!FileManager::loadSettings(signals, "test_settings.txt"));
+    CHECK(signals.getGreenDuration() == 15);
+    CHECK(signals.getYellowDuration() == 5);
 
+    // Empty file
     {
         std::ofstream file("test_settings.txt");
     }
     CHECK(!FileManager::loadSettings(signals, "test_settings.txt"));
+    CHECK(signals.getGreenDuration() == 15);
+    CHECK(signals.getYellowDuration() == 5);
+
+    // Extra content on a second line
+    {
+        std::ofstream file("test_settings.txt");
+        file << "15,5\nextra\n";
+    }
+    CHECK(!FileManager::loadSettings(signals, "test_settings.txt"));
+    CHECK(signals.getGreenDuration() == 15);
+    CHECK(signals.getYellowDuration() == 5);
+
+    // Invalid boundary values
+    {
+        std::ofstream file("test_settings.txt");
+        file << "0,1\n";
+    }
+    CHECK(!FileManager::loadSettings(signals, "test_settings.txt"));
+
+    {
+        std::ofstream file("test_settings.txt");
+        file << "1,0\n";
+    }
+    CHECK(!FileManager::loadSettings(signals, "test_settings.txt"));
+
+    CHECK(signals.getGreenDuration() == 15);
+    CHECK(signals.getYellowDuration() == 5);
+
+    // Trailing content on the same line
+    {
+        std::ofstream file("test_settings.txt");
+        file << "15,5 extra\n";
+    }
+    CHECK(!FileManager::loadSettings(signals, "test_settings.txt"));
+    CHECK(signals.getGreenDuration() == 15);
+    CHECK(signals.getYellowDuration() == 5);
+
+    // Missing comma
+    {
+        std::ofstream file("test_settings.txt");
+        file << "15 5\n";
+    }
+    CHECK(!FileManager::loadSettings(signals, "test_settings.txt"));
+    CHECK(signals.getGreenDuration() == 15);
+    CHECK(signals.getYellowDuration() == 5);
 }
+
 
 void test_missing_settings_file() {
     SignalManager signals;
@@ -88,6 +142,12 @@ void test_csv_export() {
     CHECK(contents.find("South Vehicles Waiting,1") != std::string::npos);
     CHECK(contents.find("East Vehicles Waiting,0") != std::string::npos);
     CHECK(contents.find("West Vehicles Waiting,0") != std::string::npos);
+
+    CHECK(contents.find("Total Simulation Ticks,10") != std::string::npos);
+    CHECK(contents.find("Vehicles Processed,2") != std::string::npos);
+    CHECK(contents.find("Vehicles Still Waiting,3") != std::string::npos);
+    CHECK(contents.find("Average Waiting Time,5.50") != std::string::npos);
+    CHECK(contents.find("Throughput,0.20") != std::string::npos);
 
     file.close();
     std::remove("test_statistics.csv");
