@@ -45,6 +45,9 @@ private:
     void doConfigureDurations();
     void doSignalMode();
     void doStep();
+    void doSaveSettings();
+    void doLoadSettings();
+    void doExportStatistics();
 };
 
 #endif

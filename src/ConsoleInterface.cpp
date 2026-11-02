@@ -1,7 +1,7 @@
 
 #include "ConsoleInterface.hpp"
 #include "InputValidator.hpp"
-
+#include "FileManager.hpp"
 #include <iomanip>
 #include <iostream>
 #include <string>
@@ -62,7 +62,7 @@ void ConsoleInterface::run() {
         printStatusLine();
 
         int choice = 0;
-        if (!InputValidator::readInt(in, out, "Choose option: ", 0, 12, choice)) {
+        if (!InputValidator::readInt(in, out, "Choose option: ", 0, 15, choice)) {
             out << "\nInput closed. Goodbye.\n";
             return;
         }
@@ -83,6 +83,9 @@ void ConsoleInterface::run() {
             case 10: displayStatus(); break;
             case 11: displayStatistics(); break;
             case 12: doStep(); break;
+            case 13: doSaveSettings(); break;
+            case 14: doLoadSettings(); break;
+            case 15: doExportStatistics(); break;
             default: break;
         }
     }
@@ -102,6 +105,9 @@ void ConsoleInterface::printMenu() const {
         << "10. View Queues and Signals\n"
         << "11. View Statistics\n"
         << "12. Step N Ticks\n"
+        << "13. Save Settings\n"
+        << "14. Load Settings\n"
+        << "15. Export Statistics to CSV\n"
         << " 0. Quit\n"
         << "===============================================\n";
 }
@@ -410,5 +416,44 @@ void ConsoleInterface::doStep() {
         maybeGenerateVehicle();
         engine.tick();
         printTickLine();
+    }
+}
+
+void ConsoleInterface::doSaveSettings() {
+    if (FileManager::saveSettings(
+            engine.getSignalManager(), "simulation_settings.txt")) {
+        out << "Settings saved successfully.\n";
+    } else {
+        out << "Error: Could not save settings.\n";
+    }
+}
+
+void ConsoleInterface::doLoadSettings() {
+    if (FileManager::loadSettings(
+            engine.getSignalManager(), "simulation_settings.txt")) {
+        out << "Settings loaded successfully.\n";
+    } else {
+        out << "Error: Could not load settings. Check the file and its values.\n";
+    }
+}
+
+void ConsoleInterface::doExportStatistics() {
+    const size_t waitingByApproach[4] = {
+        engine.getQueueManager().getQueueSize(Approach::NORTH),
+        engine.getQueueManager().getQueueSize(Approach::SOUTH),
+        engine.getQueueManager().getQueueSize(Approach::EAST),
+        engine.getQueueManager().getQueueSize(Approach::WEST)
+    };
+
+    if (FileManager::exportStatistics(
+            engine.getStatsManager(),
+            engine.getCurrentTick(),
+            engine.getQueueManager().getTotalWaitingCount(),
+            processedBy,
+            waitingByApproach,
+            "simulation_statistics.csv")) {
+        out << "Statistics exported to simulation_statistics.csv\n";
+    } else {
+        out << "Error: Could not export statistics.\n";
     }
 }
