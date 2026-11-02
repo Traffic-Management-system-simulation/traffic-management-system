@@ -2,3 +2,5 @@
 *.o
 *.obj
 .vscode/
+test-bin/
+traffic_sim
