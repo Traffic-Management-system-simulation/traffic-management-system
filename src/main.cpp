@@ -289,7 +289,6 @@ void doReset(Session& s) {
     std::cout << "  Reset: queues, counters, signals and clock are back to their initial state.\n";
 }
 
-}  // namespace
 void doSaveSettings(Session& s) {
     if (FileManager::saveSettings(
             s.engine.getSignalManager(), "simulation_settings.txt")) {
@@ -328,6 +327,7 @@ size_t waitingByApproach[4] = {
         std::cout << "Error: Could not export statistics.\n";
     }
 }
+}  // namespace
 
 int main(int argc, char** argv) {
     for (int i = 1; i < argc; ++i) {
