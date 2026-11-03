@@ -2,3 +2,8 @@
 *.o
 *.obj
 .vscode/
+simulation_settings.txt
+simulation_statistics.csv
+cov/
+test-bin/
+traffic_sim
