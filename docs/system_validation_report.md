@@ -23,10 +23,10 @@ This report records the validation of the Traffic Management System (Simulation)
 
 | Measure | Result |
 |---|---|
-| Unit test executables | 12 run, 0 failures |
+| Unit test executables | 13 run (including the 100-vehicle stress test), 0 failures |
 | Line coverage | **96%** (525 of 542 lines) |
 | Branch coverage | **90%** (428 of 471 branches) |
-| Valgrind on unit tests | 0 errors, no leaks, see `docs/valgrind_unit_tests.txt` |
+| Valgrind on unit tests and full program | 0 errors, no leaks (13 test programs plus 3 scripted runs of `traffic_sim`), see `docs/valgrind_unit_tests.txt` and `docs/valgrind_full_program.txt` |
 | Conflicting signal states observed | 0 (TC-SAFE-01, 200 ticks plus manual mode) |
 | Open Critical or High defects | 0 |
 
@@ -49,8 +49,8 @@ This report records the validation of the Traffic Management System (Simulation)
 | TC-SEC-03 | TMS-SR-003 | Configuration file validation | `test_file_manager`, `test_console_files` | Malformed and missing files rejected | As expected | Pass |
 | TC-SEC-04 | TMS-SR-004 | Unexpected input and end of input | `test_console_interface` | Clean exit, no abnormal termination | As expected | Pass |
 | TC-SEC-05 | TMS-SR-005 | Memory de-allocation | Valgrind on all unit tests | No leaks, no invalid accesses | 0 errors, all heap blocks freed | Pass |
-| TC-PERF-01 | TMS-NF-001 | 100 active vehicles, no noticeable delay | `tests/test_stress_100.cpp` and `tests/stress_input.txt` (PR #27) | All 100 processed, no delay | 100 processed in 70 ticks, 0.1 to 0.2 ms | Pass on PR #27 branch; confirm in `main` after merge |
-| TC-MEM-01 | TMS-NF-007 | Memory safety, full program under load | Valgrind on `traffic_sim` with `stress_input.txt` and `edge_input.txt` (PR #27) | 0 errors, no leaks | 0 errors, no leaks | Pass on PR #27 branch; confirm in `main` after merge |
+| TC-PERF-01 | TMS-NF-001 | 100 active vehicles, no noticeable delay | `tests/test_stress_100.cpp` (100 queued vehicles; 100 engine-driven arrivals) and `tests/stress_input.txt` / `tests/autogen_input.txt` through the console | All 100 processed, no conflicting greens, unique IDs, no noticeable delay | 100 processed in 70 ticks in about 0.08 ms; console runs end with 100 processed, 0 waiting; see `docs/stress_test_output.txt`, `docs/autogen_run_output.txt` | Pass |
+| TC-MEM-01 | TMS-NF-007 | Memory safety, full program under load | Valgrind on `test_stress_100` and on `traffic_sim` with `stress_input.txt`, `edge_input.txt`, `autogen_input.txt` | 0 errors, no leaks | All four runs: exit 0, all heap blocks freed, 0 errors; see `docs/valgrind_full_program.txt` | Pass |
 | TC-REL-01 | TMS-NF-002 | Determinism | Review | Reproducible runs with fixed seed | Vehicle generation uses `std::random_device`, no seed option | **Partial**, see observation 2 |
 | TC-UX-01 | TMS-NF-003 | Console usability | Manual walkthrough of the 15-option menu with valid and invalid input (add vehicles, start, step, view, statistics, durations, manual signals, stop) | Clear menu, status line after every action, clear error messages with re-prompt | Status line (state, tick, signal mode, auto-generation) shown after every action; invalid input such as `abc` or `99` gives "Invalid input. Enter a whole number between 0 and 15." and re-prompts; per-tick line shows signals, queue sizes and each vehicle that crossed with its wait; statistics shows ticks, processed, average wait, throughput | Pass |
 | TC-MAINT-01 | TMS-NF-004 | Maintainability | Code review of module boundaries and build warnings | One responsibility per module; clean build | 9 source files with one responsibility each (largest: ConsoleInterface.cpp, 459 lines); main.cpp is 26 lines; build with `-Wall -Wextra` gives 0 warnings | Pass |
@@ -78,13 +78,13 @@ Branch figures exclude compiler-generated exception and unreachable branches (`-
 
 1. **Duplicate auto-generation.** The console has its own auto-generation (`ConsoleInterface::maybeGenerateVehicle`) and does not call `SimulationEngine::setAutoGeneration`. The console version is used at runtime; the engine version is exercised only by tests. Recommended for the team to keep one implementation. Not a functional failure.
 2. **Fixed seeds (TMS-NF-002).** The Test Plan asks for fixed PRNG seeds for reproducible runs, but `VehicleManager::generateVehicle` seeds from `std::random_device` and offers no way to set a seed. Tests avoid the dependency by using probability 0.0 and 1.0.
-3. **Vehicle ID restart.** The team agreed that Reset restarts vehicle IDs at 1. This is implemented on the PR #27 branch.
+3. **Vehicle ID restart on Reset (open).** The team asked that Reset restarts vehicle IDs at 1. On current `main`, `SimulationEngine::reset()` does not reset the `VehicleManager` counter, so IDs keep increasing after a Reset. IDs remain unique, so no test fails, but the requested behaviour is not implemented. The fix is small: add `VehicleManager::reset()` (sets `nextVehicleId = 1`) and call it from `SimulationEngine::reset()`.
 
-No open Critical or High defects were found.
+No Critical or High defects were found. Observation 3 is a Low-severity open item.
 
 ## 6. Conclusion
 
-All executed test cases passed. Unit coverage is 96% lines and 90% branches, and Valgrind reported no memory errors or leaks. TC-PERF-01 and TC-MEM-01 are verified on the PR #27 branch and are to be re-confirmed in `main` after the merge. TC-UX-01 and TC-MAINT-01 were executed manually on the final `main` code. TC-PORT-01 is verified on Linux; the Windows build of the final code is confirmed with `g++ -std=c++17 -Wall -Wextra -Iinclude src/*.cpp -o traffic_sim_win.exe` (record the result here).
+All automated test cases passed. Unit coverage is 96% lines and 90% branches, and Valgrind reported no memory errors or leaks on any of the 13 unit test programs or on the full program under the 100-vehicle stress, edge-case and auto-generation scripts. TC-UX-01 and TC-MAINT-01 were executed manually on the final `main` code. TC-PORT-01 is verified on Linux; the Windows build of the final code is confirmed with `g++ -std=c++17 -Wall -Wextra -Iinclude src/*.cpp -o traffic_sim_win.exe` (record the result here). One Low-severity item is open (vehicle ID restart on Reset).
 
 ## 7. Evidence in `docs/`
 
@@ -92,5 +92,8 @@ All executed test cases passed. Unit coverage is 96% lines and 90% branches, and
 - `code_coverage_report.txt`
 - `branch_coverage_report.txt`
 - `valgrind_unit_tests.txt`
+- `valgrind_full_program.txt`
+- `stress_test_output.txt`
+- `autogen_run_output.txt`
 - `system_validation_report.md` (this file)
 - `test_case_document.md`
