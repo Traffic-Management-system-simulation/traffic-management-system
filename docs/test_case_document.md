@@ -71,11 +71,11 @@ Status: **P** = Passed, **X** = Not executed yet. Automation is the test file th
 | TMS-F-001..005 | Vehicle Manager | TC-VM-01..05 | A |
 | TMS-F-006..010 | Queue Manager | TC-Q-01..05 | A |
 | TMS-F-011..015 | Signal Manager | TC-SIG-01..04 | A |
-| TMS-F-016..021 | Simulation Engine, Console | TC-SIM-01..07 | P (TC-SIM-07 open) |
+| TMS-F-016..021 | Simulation Engine, Console | TC-SIM-01..07 | PARTIAL (TC-SIM-07 open)
 | TMS-F-022..026 | Statistics Manager | TC-MET-01..05 | A |
 | TMS-F-027..029 | File Manager | TC-DATA-01..03 | A |
 | TMS-NF-001 | Engine | TC-PERF-01 | A |
-| TMS-NF-002 | Vehicle Manager | TC-REL-01 | P (not passed: no seed option) |
+| TMS-NF-002 | Vehicle Manager | TC-REL-01 | PARTIAL (TC-REL-01 not passed: no seed option)
 | TMS-NF-003 | Console | TC-UX-01 | A |
 | TMS-NF-004 | All | TC-MAINT-01 | A |
 | TMS-NF-005 | Build | TC-PORT-01 | A |
@@ -83,4 +83,4 @@ Status: **P** = Passed, **X** = Not executed yet. Automation is the test file th
 | TMS-NF-007 | Queue, Vehicle | TC-MEM-01 | A |
 | TMS-SR-001..005 | Console, File, Queue | TC-SEC-01..05 | A |
 
-Legend: N = Not started, P = Partially verified, A = Accepted.
+Legend: N = Not started, PARTIAL = Partially verified; requirement not fully satisfied, A = Accepted.
