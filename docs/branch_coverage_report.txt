@@ -1,0 +1,19 @@
+Coverage percentages are shown to one decimal place (recomputed from the Branches/Taken counts). Branch coverage excludes compiler-generated exception and unreachable branches (gcovr --exclude-throw-branches --exclude-unreachable-branches). main.cpp (console entry point) is excluded; the console UI is covered by test_console_interface, test_console_actions and test_console_files.
+
+------------------------------------------------------------------------------
+                           GCC Code Coverage Report
+Directory: .
+------------------------------------------------------------------------------
+File                                      Branches    Taken   Cover   Missing
+------------------------------------------------------------------------------
+src/ConsoleInterface.cpp                       210      188   89.5%   19,29,38,47,48,70,218,232,298,301,336,353,359,375,391,409,423,448,457
+src/FileManager.cpp                             82       78   95.1%   13,43,54,77
+src/InputValidator.cpp                          69       65   94.2%   23,33,42
+src/QueueManager.cpp                            12       12 100.0%
+src/SignalManager.cpp                           30       28   93.3%   5,21
+src/SimulationEngine.cpp                        37       32   86.5%   36,37,45,75,76
+src/StatisticsManager.cpp                        6        6 100.0%
+src/vehicle_manager.cpp                         25       19   76.0%   19,20
+------------------------------------------------------------------------------
+TOTAL                                          471      428   90.87%
+------------------------------------------------------------------------------

@@ -1,0 +1,17 @@
+PASS: 100 vehicles queued
+  drained in 70 ticks, 0.095811 ms
+PASS: all 100 vehicles processed
+PASS: all queues empty
+PASS: 100 unique vehicle IDs
+PASS: no conflicting greens during run
+PASS: finished within tick budget
+PASS: run time within limit
+PASS: average wait is valid
+PASS: auto-generation produced 100 vehicles
+PASS: auto-generated vehicles all processed
+PASS: vehicles still queued after Stop
+PASS: Reset clears queues
+PASS: Reset clears statistics
+PASS: Reset clears clock
+PASS: 50 load/reset cycles survived
+All stress tests passed.

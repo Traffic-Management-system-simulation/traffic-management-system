@@ -1,0 +1,98 @@
+UNIT TEST REPORT - Traffic Management System (Simulation)
+Date: 03-11-2026
+Environment: Ubuntu 24.04, g++ 13.3.0, C++17
+Method: each tests/test_*.cpp compiled with all src/*.cpp except main.cpp and run
+Result: 13 test executables run (12 unit test programs + test_stress_100), 0 failures
+
+----------------------------------------------------------------
+=== test_console_actions ===
+All console action tests passed.
+=== test_console_files ===
+All console file tests passed.
+=== test_console_interface ===
+All ConsoleInterface tests passed.
+=== test_file_manager ===
+All FileManager tests passed.
+=== test_input_validator ===
+All InputValidator tests passed.
+=== test_input_validator_double ===
+All double InputValidator tests passed.
+=== test_managers ===
+=== TC-VM: Vehicle Tests ===
+PASS: Vehicle IDs are unique
+PASS: First vehicle entry tick
+PASS: Second vehicle entry tick
+PASS: Vehicle approach is stored
+
+=== TC-Q: Queue Tests ===
+PASS: North queue size
+PASS: South queue size
+PASS: Total waiting count
+PASS: Dequeue from non-empty queue
+PASS: FIFO order
+PASS: Empty queue returns false
+PASS: Queue reset clears vehicles
+
+=== TC-SIG: Signal Tests ===
+PASS: TC-SIG-01: Approach states at tick 0 (N+S green, E+W red)
+PASS: TC-SIG-02: North-South yellow after green duration
+PASS: TC-SIG-02: East-West green after North-South yellow
+PASS: TC-SIG-02: East-West yellow after green duration
+PASS: TC-SIG-02: Cycle returns to North-South
+PASS: TC-SIG-03: Longer green keeps North green at tick 2
+PASS: TC-SIG-03: North yellow after new green duration
+PASS: TC-SIG-03: East green after new yellow duration
+PASS: TC-SIG-03: Invalid durations are ignored
+PASS: TC-SIG-04: Manual phase applied and automatic cycle paused
+PASS: TC-SIG-04: Automatic mode resumes after manual mode
+PASS: TC-SAFE-01: No conflicting signals over 200 ticks and manual mode
+
+Passed: 23 | Failed: 0
+=== test_queue_manager ===
+All 5 queue tests passed.
+=== test_simulation_engine ===
+All SimulationEngine tests passed.
+=== test_statistics_manager ===
+[Statistics] Warning: negative wait time for vehicle (entryTick=10, exitTick=5). Clamping to 0.
+All StatisticsManager tests passed.
+=== test_statistics_summary ===
+PASS: printSummary prints output for empty statistics
+PASS: no vehicles processed yet
+PASS: average wait is 0 with no vehicles
+PASS: two vehicles recorded
+PASS: total wait time is 10
+PASS: average wait is 5.0
+PASS: throughput is non-negative
+PASS: throughput with 0 ticks is safe
+PASS: printSummary prints output with data
+PASS: reset clears the processed count
+All statistics summary tests passed.
+=== test_stress_100 ===
+PASS: 100 vehicles queued
+  drained in 70 ticks, 0.077209 ms
+PASS: all 100 vehicles processed
+PASS: all queues empty
+PASS: 100 unique vehicle IDs
+PASS: no conflicting greens during run
+PASS: finished within tick budget
+PASS: run time within limit
+PASS: average wait is valid
+PASS: auto-generation produced 100 vehicles
+PASS: auto-generated vehicles all processed
+PASS: vehicles still queued after Stop
+PASS: Reset clears queues
+PASS: Reset clears statistics
+PASS: Reset clears clock
+PASS: 50 load/reset cycles survived
+All stress tests passed.
+=== test_vehicle_generation ===
+Testing Vehicle Generation
+
+PASS: Probability 0.0 generates no vehicle
+PASS: Probability 1.0 always generates a vehicle
+PASS: Probability 0.1 generated rate = 0.117
+PASS: Invalid probabilities are rejected
+PASS: Vehicle IDs are unique and increasing
+PASS: Vehicle is created with correct approach and entry tick
+
+All vehicle generation tests passed.

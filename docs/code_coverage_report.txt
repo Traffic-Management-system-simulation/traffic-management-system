@@ -1,0 +1,18 @@
+Coverage percentages are shown to one decimal place (gcovr prints whole numbers; the Cover column was recomputed from the Lines/Exec counts).
+------------------------------------------------------------------------------
+                           GCC Code Coverage Report
+Directory: .
+------------------------------------------------------------------------------
+File                                         Lines     Exec   Cover   Missing
+------------------------------------------------------------------------------
+src/ConsoleInterface.cpp                       268      254   94.8%   25,31,34,43,48,89,220,304,339,356,362,412,427,457
+src/FileManager.cpp                             55       52   94.5%   14,44,78
+src/InputValidator.cpp                          48       48 100.0%
+src/QueueManager.cpp                            24       24 100.0%
+src/SignalManager.cpp                           45       45 100.0%
+src/SimulationEngine.cpp                        51       51 100.0%
+src/StatisticsManager.cpp                       34       34 100.0%
+src/vehicle_manager.cpp                         17       17 100.0%
+------------------------------------------------------------------------------
+TOTAL                                          542      525   96.86%
+------------------------------------------------------------------------------

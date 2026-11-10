@@ -1,0 +1,28 @@
+VALGRIND FULL-PROGRAM AUDIT - TC-MEM-01 / TC-PERF-01 (TMS-NF-001, NF-007, SR-005)
+Date: 03-11-2026 | Valgrind 3.22.0 | g++ 13.3.0 -g -O0 | code: main @ 089bf3a + tests/test_stress_100.cpp
+Command: valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes --error-exitcode=1
+
+===== test_stress_100  =====
+exit code: 0
+  total heap usage: 769 allocs, 769 frees, 228,744 bytes allocated
+All heap blocks were freed -- no leaks are possible
+ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+
+===== traffic_sim < tests/stress_input.txt =====
+exit code: 0
+  total heap usage: 31 allocs, 31 frees, 85,124 bytes allocated
+All heap blocks were freed -- no leaks are possible
+ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+
+===== traffic_sim < tests/edge_input.txt =====
+exit code: 0
+  total heap usage: 40 allocs, 40 frees, 86,979 bytes allocated
+All heap blocks were freed -- no leaks are possible
+ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+
+===== traffic_sim < tests/autogen_input.txt =====
+exit code: 0
+  total heap usage: 24 allocs, 24 frees, 84,963 bytes allocated
+All heap blocks were freed -- no leaks are possible
+ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+
