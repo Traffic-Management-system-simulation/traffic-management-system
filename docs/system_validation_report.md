@@ -93,7 +93,7 @@ No Critical or High defects were found.
 Automated tests executed: 13 test executables (12 unit test programs + test_stress_100), 0 failures; 96.86% line coverage and 90.87% branch coverage; Valgrind reported no errors or leaks on the unit programs and on test_stress_100 plus three scripted runs of traffic_sim. TC-UX-01 and TC-MAINT-01 were executed manually. Open items: TC-SIM-07 (failed, open), TC-REL-01 (partial, no seed option), duplicate auto-generation
 
 Not passed or not complete:
-- TC-REL-01 (fixed seed): not passed, requirement outstanding (observation 2).
+- TC-REL-01 (not passed, outstanding; no seed option)(observation 2).
 - TC-SIM-07 (IDs restart after Reset): failed, open (observation 3).
 
 Windows build: g++ -std=c++17 -Wall -Wextra -Iinclude (Get-ChildItem src\*.cpp).FullName -o traffic_sim_win.exe (PowerShell). Result: built without errors
