@@ -25,9 +25,9 @@ This report records the validation of the Traffic Management System (Simulation)
 | Measure | Result |
 |---|---|
 | Unit test executables | 13 run (includes `test_stress_100`), 0 failures. Unit test report, Valgrind unit report and this report all count the same 13 programs. |
-| Line coverage | **96.9%** (525 of 542 lines) |
-| Branch coverage | **90.9%** (428 of 471 branches) |
-| Valgrind | 0 errors, no leaks on all 13 unit test programs (`docs/valgrind_unit_tests.txt`) and on `test_stress_100` plus three scripted runs of `traffic_sim` (`docs/valgrind_full_program.txt`) |
+| Line coverage | **96.86%** (525 of 542 lines) |
+| Branch coverage | **90.87%** (428 of 471 branches) |
+| Valgrind | 0 errors, no leaks on all 12 unit test programs (`docs/valgrind_unit_tests.txt`) and on `test_stress_100` plus three scripted runs of `traffic_sim` (`docs/valgrind_full_program.txt`) |
 | Conflicting signal states observed | 0 (TC-SAFE-01, 200 ticks plus manual mode) |
 | Open Critical or High defects | 0 (three Low-severity items are open, see section 5) |
 
@@ -72,7 +72,7 @@ Unit tests were instrumented with `--coverage`. `main.cpp` is excluded because i
 | SimulationEngine.cpp | 51/51 (100.0%) | 32/37 (86.5%) |
 | StatisticsManager.cpp | 34/34 (100.0%) | 6/6 (100.0%) |
 | vehicle_manager.cpp | 17/17 (100.0%) | 19/25 (76.0%) |
-| **Total** | **525/542 (96.9%)** | **428/471 (90.9%)** |
+| **Total** | **525/542 (96.86%)** | **428/471 (90.87%)** |
 
 Branch figures exclude compiler-generated exception and unreachable branches (`--exclude-throw-branches --exclude-unreachable-branches`). The remaining uncovered lines are error paths such as file-system failures and I/O stream failures that are not practical to trigger in unit tests; the uncovered branches in `vehicle_manager.cpp` are the random-number paths. Full detail is in `docs/code_coverage_report.txt` and `docs/branch_coverage_report.txt`.
 
@@ -90,13 +90,13 @@ No Critical or High defects were found.
 
 ## 6. Conclusion
 
-All automated test cases that can be executed passed on the tested revision: 13 unit test programs with 0 failures, 96.9% line coverage and 90.9% branch coverage, and Valgrind reported no memory errors or leaks on any of the 13 programs or on the full program under the 100-vehicle stress, edge-case and auto-generation scripts. TC-UX-01 and TC-MAINT-01 were executed manually.
+Automated tests executed: 13 test executables (12 unit test programs + test_stress_100), 0 failures; 96.86% line coverage and 90.87% branch coverage; Valgrind reported no errors or leaks on the unit programs and on test_stress_100 plus three scripted runs of traffic_sim. TC-UX-01 and TC-MAINT-01 were executed manually. Open items: TC-SIM-07 (failed, open), TC-REL-01 (partial, no seed option), duplicate auto-generation
 
 Not passed or not complete:
 - TC-REL-01 (fixed seed): not passed, requirement outstanding (observation 2).
 - TC-SIM-07 (IDs restart after Reset): failed, open (observation 3).
 
-**Windows build (to be recorded):** `g++ -std=c++17 -Wall -Wextra -Iinclude src/*.cpp -o traffic_sim_win.exe` on Windows. Result: built without errors; traffic_sim_win.exe starts and runs.
+Windows build: g++ -std=c++17 -Wall -Wextra -Iinclude (Get-ChildItem src\*.cpp).FullName -o traffic_sim_win.exe (PowerShell). Result: built without errors
 
 ## 7. Evidence in `docs/`
 
