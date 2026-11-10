@@ -12,8 +12,8 @@
 |---|---|
 | Console menu | Now 15 options. Added Save Settings (13), Load Settings (14), Export Statistics to CSV (15). |
 | Architecture | Console logic moved from `main.cpp` into `ConsoleInterface`; input checks moved into `InputValidator`; file handling in `FileManager`. |
-| Vehicle IDs | Team requested that Reset restarts IDs at 1. Not implemented on `main` yet (TC-SIM-07). |
-| Auto-generation | Probability per tick, range 0.01 to 1.00. |
+| Vehicle IDs | Team requested that Reset restarts IDs at 1. Not implemented on `main` yet; TC-SIM-07 is open. |
+| Auto-generation | Probability per tick, range 0.01 to 1.00. Implemented separately in the console and in the engine (open observation). |
 | New cases | 100-vehicle stress run, Stop and Reset with vehicles queued, repeated load and reset cycles, settings save and load, CSV export, malformed file handling. |
 
 ## 2. Test cases
@@ -57,12 +57,12 @@ Status: **P** = Passed, **X** = Not executed yet. Automation is the test file th
 | TC-SEC-03 | TMS-SR-003 | Malformed config file | Load missing and garbage file | Rejected, no crash, state unchanged | test_file_manager, test_console_files | P |
 | TC-SEC-04 | TMS-SR-004 | End of input | Close input mid-session | Clean exit | test_console_interface | P |
 | TC-SEC-05 | TMS-SR-005 | Memory freed | Valgrind on all unit tests | 0 errors, no leaks | Valgrind | P |
-| TC-PERF-01 | TMS-NF-001 | 100 active vehicles | Queue 100 vehicles, run until all processed; 100 engine-driven arrivals; console scripts | All processed, no conflicting greens, no noticeable delay | test_stress_100, stress_input.txt, autogen_input.txt | P |
+| TC-PERF-01 | TMS-NF-001 | 100 active vehicles | Queue 100 vehicles, run until all processed; 100 auto-generated arrivals; console scripts | All processed, no conflicting greens, no noticeable delay | test_stress_100, stress_input.txt, autogen_input.txt | P |
 | TC-MEM-01 | TMS-NF-007 | Memory safety under load | Valgrind on test_stress_100 and on traffic_sim with stress, edge and autogen scripts | 0 errors, no leaks | Valgrind | P |
-| TC-REL-01 | TMS-NF-002 | Reproducibility | Run with a fixed seed twice | Identical results | none | Partial: no seed option |
+| TC-REL-01 | TMS-NF-002 | Reproducibility with a fixed seed | Run with a fixed seed twice | Identical results | none (no seed option exists) | Not passed: requirement outstanding |
 | TC-UX-01 | TMS-NF-003 | Usability | Manual walkthrough of all 15 menu options | Clear menu, status line, error messages | manual | P |
 | TC-MAINT-01 | TMS-NF-004 | Maintainability | Code review of module boundaries | One responsibility per module; build with -Wall -Wextra has no warnings | manual | P |
-| TC-PORT-01 | TMS-NF-005 | Portability | Build on Linux and Windows | Builds on both | Makefile, CI | Linux P; Windows: confirm on final code |
+| TC-PORT-01 | TMS-NF-005 | Portability | Build on Linux and Windows | Builds on both | Makefile, CI | P (Linux and Windows) |
 
 ## 3. RTM status
 
@@ -75,10 +75,10 @@ Status: **P** = Passed, **X** = Not executed yet. Automation is the test file th
 | TMS-F-022..026 | Statistics Manager | TC-MET-01..05 | A |
 | TMS-F-027..029 | File Manager | TC-DATA-01..03 | A |
 | TMS-NF-001 | Engine | TC-PERF-01 | A |
-| TMS-NF-002 | Vehicle Manager | TC-REL-01 | P (no seed option) |
+| TMS-NF-002 | Vehicle Manager | TC-REL-01 | P (not passed: no seed option) |
 | TMS-NF-003 | Console | TC-UX-01 | A |
 | TMS-NF-004 | All | TC-MAINT-01 | A |
-| TMS-NF-005 | Build | TC-PORT-01 | P |
+| TMS-NF-005 | Build | TC-PORT-01 | A |
 | TMS-NF-006 | Signal Manager | TC-SAFE-01 | A |
 | TMS-NF-007 | Queue, Vehicle | TC-MEM-01 | A |
 | TMS-SR-001..005 | Console, File, Queue | TC-SEC-01..05 | A |

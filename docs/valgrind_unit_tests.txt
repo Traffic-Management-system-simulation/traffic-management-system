@@ -1,48 +1,52 @@
-=== test-bin/test_console_actions ===
+=== tb/test_console_actions ===
 exit=0
-==4250== All heap blocks were freed -- no leaks are possible
-==4250== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
-=== test-bin/test_console_files ===
+All heap blocks were freed -- no leaks are possible
+ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+=== tb/test_console_files ===
 exit=0
-==4253== All heap blocks were freed -- no leaks are possible
-==4253== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
-=== test-bin/test_console_interface ===
+All heap blocks were freed -- no leaks are possible
+ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+=== tb/test_console_interface ===
 exit=0
-==4257== All heap blocks were freed -- no leaks are possible
-==4257== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
-=== test-bin/test_file_manager ===
+All heap blocks were freed -- no leaks are possible
+ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+=== tb/test_file_manager ===
 exit=0
-==4260== All heap blocks were freed -- no leaks are possible
-==4260== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
-=== test-bin/test_input_validator ===
+All heap blocks were freed -- no leaks are possible
+ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+=== tb/test_input_validator ===
 exit=0
-==4263== All heap blocks were freed -- no leaks are possible
-==4263== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
-=== test-bin/test_input_validator_double ===
+All heap blocks were freed -- no leaks are possible
+ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+=== tb/test_input_validator_double ===
 exit=0
-==4266== All heap blocks were freed -- no leaks are possible
-==4266== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
-=== test-bin/test_managers ===
+All heap blocks were freed -- no leaks are possible
+ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+=== tb/test_managers ===
 exit=0
-==4270== All heap blocks were freed -- no leaks are possible
-==4270== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
-=== test-bin/test_queue_manager ===
+All heap blocks were freed -- no leaks are possible
+ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+=== tb/test_queue_manager ===
 exit=0
-==4272== All heap blocks were freed -- no leaks are possible
-==4272== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
-=== test-bin/test_simulation_engine ===
+All heap blocks were freed -- no leaks are possible
+ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+=== tb/test_simulation_engine ===
 exit=0
-==4275== All heap blocks were freed -- no leaks are possible
-==4275== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
-=== test-bin/test_statistics_manager ===
+All heap blocks were freed -- no leaks are possible
+ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+=== tb/test_statistics_manager ===
 exit=0
-==4278== All heap blocks were freed -- no leaks are possible
-==4278== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
-=== test-bin/test_statistics_summary ===
+All heap blocks were freed -- no leaks are possible
+ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+=== tb/test_statistics_summary ===
 exit=0
-==4281== All heap blocks were freed -- no leaks are possible
-==4281== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
-=== test-bin/test_vehicle_generation ===
+All heap blocks were freed -- no leaks are possible
+ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+=== tb/test_stress_100 ===
 exit=0
-==4285== All heap blocks were freed -- no leaks are possible
-==4285== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+All heap blocks were freed -- no leaks are possible
+ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+=== tb/test_vehicle_generation ===
+exit=0
+All heap blocks were freed -- no leaks are possible
+ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)

@@ -1,8 +1,8 @@
 UNIT TEST REPORT - Traffic Management System (Simulation)
 Date: 03-11-2026
-Environment: Ubuntu 24.04 (WSL2), g++ 13.3.0, C++17
+Environment: Ubuntu 24.04, g++ 13.3.0, C++17
 Method: each tests/test_*.cpp compiled with all src/*.cpp except main.cpp and run
-Result: 12 test executables run, 0 failures
+Result: 13 test executables run, 0 failures
 
 ----------------------------------------------------------------
 === test_console_actions ===
@@ -67,12 +67,30 @@ PASS: throughput with 0 ticks is safe
 PASS: printSummary prints output with data
 PASS: reset clears the processed count
 All statistics summary tests passed.
+=== test_stress_100 ===
+PASS: 100 vehicles queued
+  drained in 70 ticks, 0.077209 ms
+PASS: all 100 vehicles processed
+PASS: all queues empty
+PASS: 100 unique vehicle IDs
+PASS: no conflicting greens during run
+PASS: finished within tick budget
+PASS: run time within limit
+PASS: average wait is valid
+PASS: auto-generation produced 100 vehicles
+PASS: auto-generated vehicles all processed
+PASS: vehicles still queued after Stop
+PASS: Reset clears queues
+PASS: Reset clears statistics
+PASS: Reset clears clock
+PASS: 50 load/reset cycles survived
+All stress tests passed.
 === test_vehicle_generation ===
 Testing Vehicle Generation
 
 PASS: Probability 0.0 generates no vehicle
 PASS: Probability 1.0 always generates a vehicle
-PASS: Probability 0.1 generated rate = 0.119
+PASS: Probability 0.1 generated rate = 0.117
 PASS: Invalid probabilities are rejected
 PASS: Vehicle IDs are unique and increasing
 PASS: Vehicle is created with correct approach and entry tick
